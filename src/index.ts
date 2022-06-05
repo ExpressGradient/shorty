@@ -23,6 +23,11 @@ app.register(auth, { prefix: "/auth" });
 app.register(shortcuts, { prefix: "/shortcuts" });
 app.register(goto, { prefix: "/goto" });
 
+// Health Check Route
+app.get("/health", async (request, reply) => {
+    reply.send({ message: "I'm doing fine! Thanks for asking." });
+});
+
 app.listen(envConfig.PORT).then(() =>
     console.log(`Shorty listening on Port ${envConfig.PORT}`)
 );
