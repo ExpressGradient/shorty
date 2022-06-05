@@ -22,6 +22,13 @@ const responsePayload = typebox_1.Type.Object({
 const auth = async (app, opts) => {
     app.post("/register", {
         schema: {
+            description: `
+                    Register a new user by passing in credentials like username, email and password.
+                    Returns a JWT which is required to access rest of the API.
+                    
+                    Throws a Not Acceptable Error if the Email is already in use.
+                    Throws an Internal Server Error if the user could not be created.
+                `,
             body: registerPayload,
             response: { 201: responsePayload },
         },
@@ -54,6 +61,14 @@ const auth = async (app, opts) => {
     });
     app.post("/login", {
         schema: {
+            description: `
+                    Login a user by passing in credentials like email and password.
+                    Returns a JWT which is required to access rest of the API.
+                    
+                    Throws a Not Found Error if the user could not be found.
+                    Throws a Bad Request Error if the password is incorrect.
+                    Throws an Internal Server Error if the user could not be logged in.
+                `,
             body: loginPayload,
             response: { 200: responsePayload },
         },
@@ -68,7 +83,7 @@ const auth = async (app, opts) => {
         else {
             // Compare the password with the hash stored in the database
             if (!(await (0, bcrypt_1.compare)(password, user.password))) {
-                reply.unauthorized("Invalid password");
+                reply.badRequest("Invalid password");
             }
             else {
                 // Sign a JWT and reply

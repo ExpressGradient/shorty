@@ -3,6 +3,7 @@
     "definitions": {
         "User": {
             "type": "object",
+            "description": "User Model.\nContains fields like username, email, hashedPassword, etc.",
             "properties": {
                 "id": {
                     "type": "integer"
@@ -29,6 +30,7 @@
             }
         },
         "Shortcut": {
+            "description": "Shortcut Model used to store Shortcuts.\nEach shortcut is linked to a user.\nContains fields like shortLink, destination, tags etc",
             "required": ["destination", "shortLink", "tags", "description"],
             "type": "object",
             "properties": {
@@ -67,6 +69,7 @@
             }
         },
         "Tag": {
+            "description": "Tag Model used to store Tags.\nEach tag is linked to a shortcut.\nContains fields like name, color, etc",
             "type": "object",
             "properties": {
                 "id": {
@@ -88,6 +91,7 @@
             }
         },
         "Record": {
+            "description": "Record Model serves no purpose for the API except for analytics.\nFor example we could get to know how many times a user is accessing a shortcut.",
             "type": "object",
             "properties": {
                 "id": {

@@ -22,6 +22,10 @@ const deleteShortcutParam = Type.Object({
     id: Type.Number(),
 });
 
+const shortCutHeaders = Type.Object({
+    Authorization: Type.String({ default: "Bearer something" }),
+});
+
 const prisma = new PrismaClient();
 
 const shortcuts: FastifyPluginAsync = async (app, opts) => {
@@ -45,6 +49,14 @@ const shortcuts: FastifyPluginAsync = async (app, opts) => {
         "/",
         {
             schema: {
+                description: `
+                    Get all shortcuts for a User Id.
+                    Pass in filters and sorting options.
+                    Searchable by shortLink, destination, and tags.
+                    
+                    Throws Internal Server Error if failed to fetch data.
+                `,
+                headers: shortCutHeaders,
                 querystring: getShortcutsQuery,
                 response: {
                     200: {
@@ -98,6 +110,13 @@ const shortcuts: FastifyPluginAsync = async (app, opts) => {
         "/",
         {
             schema: {
+                description: `
+                    Create a new Shortcut by passing in all the necessary information like destination, shortLink, tags etc.
+                    
+                    Throws a Not Acceptable Error if the shortLink is already taken.
+                    Throws an Internal Server Error if failed to create the shortcut.
+                `,
+                headers: shortCutHeaders,
                 body: { $ref: "Shorty#/definitions/Shortcut" },
                 response: {
                     201: createShortcutResponse,
@@ -141,7 +160,18 @@ const shortcuts: FastifyPluginAsync = async (app, opts) => {
     // Route for deleting a shortcut
     app.delete<{ Params: Static<typeof deleteShortcutParam> }>(
         "/:id",
-        { schema: { params: deleteShortcutParam } },
+        {
+            schema: {
+                description: `
+                    Delete a Shortcut by passing in the id of the shortcut.
+                    
+                    Throws a Not Found Error if the shortcut does not exist.
+                    Throws an Internal Server Error if failed to delete the shortcut.
+                `,
+                headers: shortCutHeaders,
+                params: deleteShortcutParam,
+            },
+        },
         async (request, reply) => {
             try {
                 await prisma.shortcut.delete({

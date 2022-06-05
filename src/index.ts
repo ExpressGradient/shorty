@@ -2,44 +2,27 @@
 import fastify from "fastify";
 import fastifyJwt from "@fastify/jwt";
 import fastifySensible from "@fastify/sensible";
+import fastifySwagger from "@fastify/swagger";
 
 // Route Modules
 import shortcuts from "./routes/shortcuts";
 import auth from "./routes/auth";
 import goto from "./routes/goto";
 
-import envSchema from "env-schema";
+// Config imports
+import { envConfig, swaggerConfig } from "./utils/pluginConfig";
 
 const app = fastify({ logger: true });
 
-// Register Plugins
-type Schema = {
-    JWT_SECRET: string;
-    PORT: number;
-};
-const config = envSchema<Schema>({
-    schema: {
-        type: "object",
-        required: ["JWT_SECRET", "PORT"],
-        properties: {
-            JWT_SECRET: {
-                type: "string",
-            },
-            PORT: {
-                type: "number",
-            },
-        },
-    },
-    dotenv: true,
-});
-app.register(fastifyJwt, { secret: config.JWT_SECRET });
+app.register(fastifyJwt, { secret: envConfig.JWT_SECRET });
 app.register(fastifySensible);
+app.register(fastifySwagger, swaggerConfig);
 
 // Register Routes
 app.register(auth, { prefix: "/auth" });
 app.register(shortcuts, { prefix: "/shortcuts" });
 app.register(goto, { prefix: "/goto" });
 
-app.listen(config.PORT).then(() =>
-    console.log(`Shorty listening on Port ${config.PORT}`)
+app.listen(envConfig.PORT).then(() =>
+    console.log(`Shorty listening on Port ${envConfig.PORT}`)
 );

@@ -6,6 +6,10 @@ const getGotoShortLinkParams = Type.Object({
     shortLink: Type.String(),
 });
 
+const getGotoShortLinkHeaders = Type.Object({
+    Authorization: Type.String({ default: "Bearer something" }),
+});
+
 const prisma = new PrismaClient();
 
 const goto: FastifyPluginAsync = async (app, opts) => {
@@ -21,7 +25,18 @@ const goto: FastifyPluginAsync = async (app, opts) => {
     // Add route to goto shortLinks
     app.get<{ Params: Static<typeof getGotoShortLinkParams> }>(
         "/:shortLink",
-        { schema: { params: getGotoShortLinkParams } },
+        {
+            schema: {
+                description: `
+                    Enter the shortLink and get redirected to the destination
+                    
+                    Throws a Not Found Error if the shortLink does not exist
+                    Throws an Internal Server Error if failed to goto shortLink
+                `,
+                params: getGotoShortLinkParams,
+                headers: getGotoShortLinkHeaders,
+            },
+        },
         async (request, reply) => {
             try {
                 const shortcut = await prisma.shortcut.findUnique({
@@ -31,12 +46,17 @@ const goto: FastifyPluginAsync = async (app, opts) => {
                             shortLink: request.params.shortLink,
                         },
                     },
-                    select: { destination: true },
+                    select: { destination: true, id: true },
                 });
 
                 if (!shortcut) {
                     reply.notFound("Shortcut not found");
                 } else {
+                    // Add it to record
+                    await prisma.record.create({
+                        data: { shortcutId: shortcut.id },
+                    });
+
                     reply.redirect(shortcut.destination);
                 }
             } catch (e) {
