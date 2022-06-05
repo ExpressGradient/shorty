@@ -39,11 +39,19 @@ const auth: FastifyPluginAsync = async (app, opts) => {
             // Create a user
             try {
                 // Hash the password
-                const hashedPassword = await hash(password, 15);
+                const hashedPassword = await hash(password, 10);
 
-                await prisma.user.create({
+                const { id } = await prisma.user.create({
                     data: { username, email, password: hashedPassword },
+                    select: { id: true },
                 });
+
+                // Sign a token and reply
+                const token = await app.jwt.sign({ id, email });
+
+                reply
+                    .code(201)
+                    .send({ message: "User created", data: { token } });
             } catch (e) {
                 if (
                     e instanceof Prisma.PrismaClientKnownRequestError &&
@@ -54,11 +62,6 @@ const auth: FastifyPluginAsync = async (app, opts) => {
                     reply.internalServerError();
                 }
             }
-
-            // Sign a token and reply
-            const token = await app.jwt.sign({ email, password });
-
-            reply.code(201).send({ message: "User created", data: { token } });
         }
     );
 
@@ -85,7 +88,10 @@ const auth: FastifyPluginAsync = async (app, opts) => {
                     reply.unauthorized("Invalid password");
                 } else {
                     // Sign a JWT and reply
-                    const token = await app.jwt.sign({ email, password });
+                    const token = await app.jwt.sign({
+                        id: user.id,
+                        email,
+                    });
 
                     reply.send({
                         message: `Welcome ${user.username}`,

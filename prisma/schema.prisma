@@ -2,7 +2,13 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+}
+
+generator jsonSchema {
+  provider = "prisma-json-schema-generator"
+  output   = "../src/utils"
 }
 
 datasource db {
@@ -24,16 +30,15 @@ model User {
 model Shortcut {
   id          Int      @id @default(autoincrement())
   destination String
-  shortcut    String
+  shortLink   String
   tags        Tag[]
-  description String?
+  description String
   user        User     @relation(references: [id], fields: [userId])
   userId      Int
   createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now())
   records     Record[]
 
-  @@unique([shortcut, userId])
+  @@unique([shortLink, userId])
   @@map("shortcuts")
 }
 
@@ -42,7 +47,6 @@ model Tag {
   tag       String
   shortcuts Shortcut[]
   createdAt DateTime   @default(now())
-  updatedAt DateTime   @default(now())
 
   @@map("tags")
 }

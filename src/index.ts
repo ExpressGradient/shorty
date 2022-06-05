@@ -2,24 +2,32 @@
 import fastify from "fastify";
 import fastifyJwt from "@fastify/jwt";
 import fastifySensible from "@fastify/sensible";
-import fastifyEnv from "@fastify/env";
 
 // Route Modules
 import shortcuts from "./shortcuts";
 import auth from "./auth";
 
+import envSchema from "env-schema";
+
 const app = fastify({ logger: true });
 
 // Register Plugins
-const schema = {
-    type: "object",
-    required: ["JWT_SECRET"],
-    properties: {
-        JWT_SECRET: { type: "string" },
-    },
+type Schema = {
+    JWT_SECRET: string;
 };
-app.register(fastifyEnv, { schema, dotenv: true });
-app.register(fastifyJwt, { secret: process.env.JWT_SECRET || "" });
+const config = envSchema<Schema>({
+    schema: {
+        type: "object",
+        required: ["JWT_SECRET"],
+        properties: {
+            JWT_SECRET: {
+                type: "string",
+            },
+        },
+    },
+    dotenv: true,
+});
+app.register(fastifyJwt, { secret: config.JWT_SECRET });
 app.register(fastifySensible);
 
 // Register Routes

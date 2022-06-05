@@ -1,0 +1,119 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "username": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "shortcuts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Shortcut"
+          }
+        }
+      }
+    },
+    "Shortcut": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "destination": {
+          "type": "string"
+        },
+        "shortLink": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Tag"
+          }
+        },
+        "description": {
+          "type": "string"
+        },
+        "user": {
+          "$ref": "#/definitions/User"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "records": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Record"
+          }
+        }
+      }
+    },
+    "Tag": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "tag": {
+          "type": "string"
+        },
+        "shortcuts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Shortcut"
+          }
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "Record": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "shortcut": {
+          "$ref": "#/definitions/Shortcut"
+        },
+        "accessedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  },
+  "type": "object",
+  "properties": {
+    "user": {
+      "$ref": "#/definitions/User"
+    },
+    "shortcut": {
+      "$ref": "#/definitions/Shortcut"
+    },
+    "tag": {
+      "$ref": "#/definitions/Tag"
+    },
+    "record": {
+      "$ref": "#/definitions/Record"
+    }
+  }
+}
