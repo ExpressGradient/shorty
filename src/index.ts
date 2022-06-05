@@ -6,6 +6,7 @@ import fastifySensible from "@fastify/sensible";
 // Route Modules
 import shortcuts from "./routes/shortcuts";
 import auth from "./routes/auth";
+import goto from "./routes/goto";
 
 import envSchema from "env-schema";
 
@@ -37,6 +38,7 @@ app.register(fastifySensible);
 // Register Routes
 app.register(auth, { prefix: "/auth" });
 app.register(shortcuts, { prefix: "/shortcuts" });
+app.register(goto, { prefix: "/goto" });
 
 app.listen(config.PORT).then(() =>
     console.log(`Shorty listening on Port ${config.PORT}`)

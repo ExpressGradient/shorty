@@ -10,6 +10,7 @@ const sensible_1 = __importDefault(require("@fastify/sensible"));
 // Route Modules
 const shortcuts_1 = __importDefault(require("./routes/shortcuts"));
 const auth_1 = __importDefault(require("./routes/auth"));
+const goto_1 = __importDefault(require("./routes/goto"));
 const env_schema_1 = __importDefault(require("env-schema"));
 const app = (0, fastify_1.default)({ logger: true });
 const config = (0, env_schema_1.default)({
@@ -32,5 +33,6 @@ app.register(sensible_1.default);
 // Register Routes
 app.register(auth_1.default, { prefix: "/auth" });
 app.register(shortcuts_1.default, { prefix: "/shortcuts" });
+app.register(goto_1.default, { prefix: "/goto" });
 app.listen(config.PORT).then(() => console.log(`Shorty listening on Port ${config.PORT}`));
 //# sourceMappingURL=index.js.map
