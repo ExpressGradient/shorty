@@ -7,6 +7,7 @@
   "source": "src/index.ts",
   "scripts": {
     "test": "tap --reporter=list",
+    "benchmark": "node src/benchmarks/index.js",
     "watch": "parcel watch",
     "build": "parcel build",
     "dev": "nodemon ./dist/index.js",
@@ -37,6 +38,7 @@
     "@types/bcrypt": "^5.0.0",
     "@types/node": "^17.0.38",
     "@types/tap": "^15.0.7",
+    "autocannon": "^7.9.0",
     "axios": "^0.27.2",
     "nodemon": "^2.0.16",
     "parcel": "^2.6.0",
