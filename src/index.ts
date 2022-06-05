@@ -14,14 +14,18 @@ const app = fastify({ logger: true });
 // Register Plugins
 type Schema = {
     JWT_SECRET: string;
+    PORT: number;
 };
 const config = envSchema<Schema>({
     schema: {
         type: "object",
-        required: ["JWT_SECRET"],
+        required: ["JWT_SECRET", "PORT"],
         properties: {
             JWT_SECRET: {
                 type: "string",
+            },
+            PORT: {
+                type: "number",
             },
         },
     },
@@ -34,4 +38,6 @@ app.register(fastifySensible);
 app.register(auth, { prefix: "/auth" });
 app.register(shortcuts, { prefix: "/shortcuts" });
 
-app.listen(3000).then(() => console.log("Shorty listening on Port 3000"));
+app.listen(config.PORT).then(() =>
+    console.log(`Shorty listening on Port ${config.PORT}`)
+);

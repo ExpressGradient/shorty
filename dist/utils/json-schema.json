@@ -29,13 +29,15 @@
             }
         },
         "Shortcut": {
+            "required": ["destination", "shortLink", "tags", "description"],
             "type": "object",
             "properties": {
                 "id": {
                     "type": "integer"
                 },
                 "destination": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "uri"
                 },
                 "shortLink": {
                     "type": "string"
@@ -53,10 +55,6 @@
                     "$ref": "#/definitions/User"
                 },
                 "createdAt": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "updatedAt": {
                     "type": "string",
                     "format": "date-time"
                 },
@@ -84,10 +82,6 @@
                     }
                 },
                 "createdAt": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "updatedAt": {
                     "type": "string",
                     "format": "date-time"
                 }

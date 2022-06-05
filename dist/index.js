@@ -15,10 +15,13 @@ const app = (0, fastify_1.default)({ logger: true });
 const config = (0, env_schema_1.default)({
     schema: {
         type: "object",
-        required: ["JWT_SECRET"],
+        required: ["JWT_SECRET", "PORT"],
         properties: {
             JWT_SECRET: {
                 type: "string",
+            },
+            PORT: {
+                type: "number",
             },
         },
     },
@@ -29,5 +32,5 @@ app.register(sensible_1.default);
 // Register Routes
 app.register(auth_1.default, { prefix: "/auth" });
 app.register(shortcuts_1.default, { prefix: "/shortcuts" });
-app.listen(3000).then(() => console.log("Shorty listening on Port 3000"));
+app.listen(config.PORT).then(() => console.log(`Shorty listening on Port ${config.PORT}`));
 //# sourceMappingURL=index.js.map
