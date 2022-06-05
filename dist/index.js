@@ -8,8 +8,8 @@ const fastify_1 = __importDefault(require("fastify"));
 const jwt_1 = __importDefault(require("@fastify/jwt"));
 const sensible_1 = __importDefault(require("@fastify/sensible"));
 // Route Modules
-const shortcuts_1 = __importDefault(require("./shortcuts"));
-const auth_1 = __importDefault(require("./auth"));
+const shortcuts_1 = __importDefault(require("./routes/shortcuts"));
+const auth_1 = __importDefault(require("./routes/auth"));
 const env_schema_1 = __importDefault(require("env-schema"));
 const app = (0, fastify_1.default)({ logger: true });
 const config = (0, env_schema_1.default)({

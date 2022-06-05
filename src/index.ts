@@ -4,8 +4,8 @@ import fastifyJwt from "@fastify/jwt";
 import fastifySensible from "@fastify/sensible";
 
 // Route Modules
-import shortcuts from "./shortcuts";
-import auth from "./auth";
+import shortcuts from "./routes/shortcuts";
+import auth from "./routes/auth";
 
 import envSchema from "env-schema";
 

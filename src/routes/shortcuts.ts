@@ -1,6 +1,6 @@
 import { FastifyPluginAsync } from "fastify";
 import { PrismaClient, Shortcut, Prisma } from "@prisma/client";
-import jsonSchema from "./utils/json-schema.json";
+import jsonSchema from "../utils/json-schema.json";
 import { Static, Type } from "@sinclair/typebox";
 import slugify from "slugify";
 
@@ -11,11 +11,15 @@ const getShortcutsQuery = Type.Object({
     order: Type.Optional(Type.String()),
 });
 
-const createShortcutsResponse = Type.Object({
+const createShortcutResponse = Type.Object({
     message: Type.String(),
     data: Type.Object({
         id: Type.Number(),
     }),
+});
+
+const deleteShortcutParam = Type.Object({
+    id: Type.Number(),
 });
 
 const prisma = new PrismaClient();
@@ -89,14 +93,14 @@ const shortcuts: FastifyPluginAsync = async (app, opts) => {
     // Route for creating a shortcut
     app.post<{
         Body: Prisma.ShortcutCreateWithoutTagsInput;
-        Reply: Static<typeof createShortcutsResponse>;
+        Reply: Static<typeof createShortcutResponse>;
     }>(
         "/",
         {
             schema: {
                 body: { $ref: "Shorty#/definitions/Shortcut" },
                 response: {
-                    201: createShortcutsResponse,
+                    201: createShortcutResponse,
                 },
             },
         },
@@ -128,14 +132,38 @@ const shortcuts: FastifyPluginAsync = async (app, opts) => {
                     reply.notAcceptable("ShortLink already in use");
                 } else {
                     app.log.error(e);
-                    reply.internalServerError("Failed to create a ShortLink");
+                    reply.internalServerError("Failed to create a Shortcut");
                 }
             }
         }
     );
 
     // Route for deleting a shortcut
-    app.delete("/:id", async (request, reply) => {});
+    app.delete<{ Params: Static<typeof deleteShortcutParam> }>(
+        "/:id",
+        { schema: { params: deleteShortcutParam } },
+        async (request, reply) => {
+            try {
+                await prisma.shortcut.delete({
+                    where: { id: request.params.id },
+                });
+
+                reply.send({ message: "Shortcut deleted" });
+            } catch (e) {
+                if (
+                    e instanceof Prisma.PrismaClientKnownRequestError &&
+                    (e.code === "P2001" || e.code === "P2025")
+                ) {
+                    reply.notFound(
+                        `Shortcut with Id: ${request.params.id} not found`
+                    );
+                } else {
+                    app.log.error(e);
+                    reply.internalServerError("Failed to delete a Shortcut");
+                }
+            }
+        }
+    );
 };
 
 export default shortcuts;
