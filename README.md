@@ -44,7 +44,7 @@ The following are a few techniques to scale the database with increase in users:
 * Vertical Scaling by adding more RAM and CPU.
 * Sharding on the Shortcuts table with (user_id and shortLink) as the sharding key.
 * Command Query Responsibility Segregation (only useful if read inconsistency is allowed). Replicating the database to separate servers for Read and Write.
-* Global Distribution. Including a location column in the Users table and including it while.
+* Global Distribution. Adding a location column in the users table and including it while replicating the database globally.
 
 ## What are the internal fields?
 Every table includes a createdAt field defaulting to the current time while inserting the record.
