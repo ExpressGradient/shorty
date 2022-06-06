@@ -11,6 +11,7 @@ Routes:
 - POST /shortcuts - for creating a new shortcut
 - DELETE /shortcuts/:id - for deleting a shortcut
 - GET /goto/:shortLink - for accessing a shortcut
+- GET /docs - docs
 
 ## Built with
 * [Fastify](https://fastify.io) and its plugins for the API
