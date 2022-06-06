@@ -52,4 +52,4 @@ Every table includes a createdAt field defaulting to the current time while inse
 While accessing the shortcut, the action is recorded. This is useful for analytics. For example, how many times a user has been accessing a shortcut, so that the shortcut can be pushed into recommendations.
 
 ## Infrastructure
-A Render Web Service hosted in Ohio and a Render Postgres DB hosted in the same cluster.
+A Render Web Service hosted in Singapore and a Render Postgres DB hosted in the same cluster.
